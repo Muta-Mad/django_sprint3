@@ -4,8 +4,6 @@ from django.contrib.auth import get_user_model
 
 
 User = get_user_model()
-
-
 TEXT_LENGTH = 256
 
 
@@ -44,14 +42,12 @@ class Post(Base):
     )
     location = models.ForeignKey(
         'Location', on_delete=models.SET_NULL,
-        blank=True,
         null=True,
         verbose_name='Местоположение',
 
     )
     category = models.ForeignKey(
         'Category', on_delete=models.SET_NULL,
-        blank=True,
         null=True,
         verbose_name='Категория'
     )
