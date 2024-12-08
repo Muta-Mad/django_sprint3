@@ -1,24 +1,17 @@
-
-
 from django.db import models
 
 from django.contrib.auth import get_user_model
 
 
-USER = get_user_model()
+User = get_user_model()
+
+
+TEXT_LENGTH = 256
 
 
 class Base(models.Model):
-    title = models.CharField(
-        max_length=256,
-        blank=False,
-        null=False,
-        verbose_name='Заголовок'
-    )
     is_published = models.BooleanField(
         default=True,
-        blank=False,
-        null=False,
         verbose_name='Опубликовано',
         help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
@@ -32,33 +25,33 @@ class Base(models.Model):
 
 
 class Post(Base):
+    title = models.CharField(
+        max_length=TEXT_LENGTH,
+        verbose_name='Заголовок'
+    )
     text = models.TextField(
-        blank=False,
-        null=False,
         verbose_name='Текст'
     )
     pub_date = models.DateTimeField(
-        blank=False,
-        null=False,
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — '
-                  'можно делать отложенные публикации.'
+        'можно делать отложенные публикации.'
     )
     author = models.ForeignKey(
-        USER, on_delete=models.CASCADE,
-        null=False,
+        User, on_delete=models.CASCADE,
         verbose_name='Автор публикации',
 
     )
     location = models.ForeignKey(
         'Location', on_delete=models.SET_NULL,
+        blank=True,
         null=True,
         verbose_name='Местоположение',
 
     )
     category = models.ForeignKey(
         'Category', on_delete=models.SET_NULL,
-        blank=False,
+        blank=True,
         null=True,
         verbose_name='Категория'
     )
@@ -66,21 +59,22 @@ class Post(Base):
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
+        ordering = ['-pub_date']
 
 
 class Category(Base):
+    title = models.CharField(
+        max_length=TEXT_LENGTH,
+        verbose_name='Заголовок'
+    )
     description = models.TextField(
-        blank=False,
-        null=False,
         verbose_name='Описание'
     )
     slug = models.SlugField(
         unique=True,
-        blank=False,
-        null=False,
         verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL; разрешены символы '
-                  'латиницы, цифры, дефис и подчёркивание.'
+        'латиницы, цифры, дефис и подчёркивание.'
     )
 
     class Meta:
@@ -90,9 +84,7 @@ class Category(Base):
 
 class Location(Base):
     name = models.CharField(
-        max_length=256,
-        blank=False,
-        null=False,
+        max_length=TEXT_LENGTH,
         verbose_name='Название места'
     )
 
