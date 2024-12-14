@@ -8,7 +8,7 @@ POSTS_PER_PAGE = 5
 
 
 def posts():
-    """Получаем посты из базы данных"""
+    """Получаем актуальные посты(опубликованные)из базы данных"""
     return Post.objects.filter(
         is_published=True,
         category__is_published=True,
